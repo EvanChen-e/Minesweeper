@@ -2,8 +2,9 @@ import de.bezier.guido.*;
 //Declare and initialize constants NUM_ROWS and NUM_COLS = 20
 private static final int NUM_ROWS = 20;
 private static final int NUM_COLS = 20;
-private static final int NUM_BOMBS = 50;
-private boolean gameOver = false;
+private static final int NUM_BOMBS = 2;
+public boolean gameOver = false;
+public int count = 0;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
 
@@ -46,19 +47,34 @@ public void draw ()
 }
 public boolean isWon()
 {
-    //your code here
+    if(count==mines.size()){
+      return true;
+    }
     return false;
 }
 public void displayLosingMessage()
 {
-    fill(#D89090,10);
-    rect(100,100,200,200);
-    textSize(20);
+    buttons[10][6].setLabel("G");
+    buttons[10][7].setLabel("A");
+    buttons[10][8].setLabel("M");
+    buttons[10][9].setLabel("E");
+    buttons[10][11].setLabel("O");
+    buttons[10][12].setLabel("V");
+    buttons[10][13].setLabel("E");
+    buttons[10][14].setLabel("R");
+
     gameOver = true;
 }
 public void displayWinningMessage()
 {
-    //your code here
+    
+    buttons[10][6].setLabel("Y");
+    buttons[10][7].setLabel("O");
+    buttons[10][8].setLabel("U");
+    buttons[10][10].setLabel("W");
+    buttons[10][11].setLabel("I");
+    buttons[10][12].setLabel("N");
+    buttons[10][13].setLabel("!");
     gameOver = true;
 }
 public boolean isValid(int r, int c)
@@ -97,6 +113,8 @@ public class MSButton
         y = myRow*height;
         myLabel = "";
         flagged = clicked = false;
+        count = 0;
+        
         Interactive.add( this ); // register it with the manager
     }
 
@@ -106,9 +124,15 @@ public class MSButton
         if(mouseButton == RIGHT){ //flagging
           if(!isFlagged()){
             flagged = true;
+            if(mines.contains(this)){
+             count++; 
+            }
           }else if(isFlagged()){
             flagged = false;
             clicked = false;
+            if(mines.contains(this)){
+             count--; 
+            }
           }
         }
         if(mouseButton == LEFT && !isFlagged()){ //prevents flagged squares from being clicked
@@ -137,6 +161,7 @@ public class MSButton
             fill(0);
          else if( clicked && mines.contains(this) )
              fill(255,0,0);
+             
         else if(clicked)
             fill( 200 );
         else 
